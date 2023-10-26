@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Diary</string>
+    <string name="mon"></string>
+    <string name="month">month</string>
+    <string name="prev"><![CDATA[<]]></string>
+    <string name="next"><![CDATA[>]]></string>
+    <string name="monday">Mon</string>
+    <string name="tues">Tues</string>
+    <string name="wed">Wed</string>
+    <string name="thurs">Thurs</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
+    <string name="desc">ADD IMAGE TO DIARY</string>
+    <string name="edit">EDIT</string>
+    <string name="save">SAVE</string>
+    <string name="msg">
+        Are you sure you don\'t want to save your diary?
+        Click \'YES\' to proceed or
+        Click \'NO\' to go back and save your diary.</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="delete">Are you sure you want to delete this diary?</string>
+    <string name="loading">LOADING</string>
+    <string name="diary_month">month</string>
+    <string name="remove">delete</string>
+</resources>
