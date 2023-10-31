@@ -28,6 +28,15 @@ class Diary : AppCompatActivity(){
     private lateinit var b: Bitmap
     private lateinit var byteArray: ByteArray
 
+    fun alert(alertPopup: PopupWindow, edit: Button, save: Button, backButton: Button, photo: ImageView){
+        alertPopup.isTouchable = true
+        alertPopup.showAtLocation(findViewById(R.id.cardView), Gravity.CENTER_VERTICAL, 0, 0)
+//                    alertPopup.update(0, 0, (this.resources.displayMetrics.widthPixels/2), (this.resources.displayMetrics.heightPixels/4))
+        edit.isClickable = false
+        save.isClickable = false
+        backButton.isClickable = false
+        photo.isClickable = false
+    }
     @SuppressLint("DiscouragedApi", "SetTextI18n", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,9 +141,8 @@ class Diary : AppCompatActivity(){
 
         edit.setOnClickListener {
             diary.isEnabled = true
-            save.isEnabled = true
             editClickFlag = true
-
+            save.isEnabled = true
             diary.setSelection(diary.length())
             diary.requestFocus()
             diaryText = diary.editableText
@@ -146,6 +154,28 @@ class Diary : AppCompatActivity(){
             diary.clearFocus()
             diary.isEnabled = false
             diary.setTextColor(Color.parseColor("#000000"))
+            if(diary.text.toString() != "" && imageChosenFlag){
+                if(!databaseBool){
+    //                    add new data and go back to home
+                    db.addDiary("$diaryMonth/$diaryDate", byteArray, diaryText.toString())
+                    startActivity(intent)
+                }else if(diaryText.toString() == prevDiaryText && byteArray.contentEquals(prevImage)) {
+    //                    no update needed
+                    Toast.makeText(this, "No changes to save.", Toast.LENGTH_LONG).show()
+                }else{
+    //                    update data
+                    db.update("$diaryMonth/$diaryDate", byteArray, diaryText.toString())
+                    startActivity(intent)
+                }
+            }else if(diary.text.toString() == "" && imageChosenFlag){
+    //                diary text not given; diary text cannot be empty
+                Toast.makeText(this, "Diary must have some text to save diary.", Toast.LENGTH_LONG).show()
+            }else if(diary.text.toString() != "" && !imageChosenFlag){
+    //                diary image not given; diary image cannot be empty
+                Toast.makeText(this, "Picture must be chosen to save diary.", Toast.LENGTH_LONG).show()
+            }else{
+                Toast.makeText(this, "Nothing to save.", Toast.LENGTH_LONG).show()
+            }
         }
 
         intent.putExtra("index", index)
@@ -156,35 +186,17 @@ class Diary : AppCompatActivity(){
             if(diary.text.toString() != "" && imageChosenFlag){
                 if(editClickFlag){
 //                    if diary and image given, but edit button is clicked (i.e., save isn't clicked)
+//                    if diary or image is not given
 //                    show popup
-                    alertPopup.isTouchable = true
-                    alertPopup.showAtLocation(findViewById(R.id.cardView), Gravity.CENTER_VERTICAL, 0, 0)
-//                    alertPopup.update(0, 0, (this.resources.displayMetrics.widthPixels/2), (this.resources.displayMetrics.heightPixels/4))
-                    edit.isClickable = false
-                    save.isClickable = false
-                    backButton.isClickable = false
-                    photo.isClickable = false
-                }else if(!databaseBool){
-//                    add new data and go back to home
-                    db.addDiary("$diaryMonth/$diaryDate", byteArray, diaryText.toString())
-                    startActivity(intent)
-                }else if(diaryText.toString() == prevDiaryText && byteArray.contentEquals(prevImage)) {
-//                    no update needed
-                    startActivity(intent)
-                }else{
-//                    update data
-                    db.update("$diaryMonth/$diaryDate", byteArray, diaryText.toString())
+                    alert(alertPopup, edit, save, backButton, photo)
+                }else if (diaryText.toString() == prevDiaryText && byteArray.contentEquals(prevImage)){
                     startActivity(intent)
                 }
             }else if(diary.text.toString() == "" && !imageChosenFlag){
 //                no new data; go back to home
                 startActivity(intent)
-            }else if(diary.text.toString() == "" && imageChosenFlag){
-//                diary text not given; diary text cannot be empty
-                Toast.makeText(this, "Diary must have some text to save diary.", Toast.LENGTH_LONG).show()
-            }else if(diary.text.toString() != "" && !imageChosenFlag){
-//                diary image not given; diary image cannot be empty
-                Toast.makeText(this, "Picture must be chosen to save diary.", Toast.LENGTH_LONG).show()
+            }else if((diary.text.toString() != "" && !imageChosenFlag) || (diary.text.toString() == "" && imageChosenFlag)){
+                alert(alertPopup, edit, save, backButton, photo)
             }
         }
 
