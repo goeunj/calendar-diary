@@ -189,9 +189,8 @@ class MainActivity : AppCompatActivity(){
 
         next.setOnClickListener {
             prevCounter -= 1
-
 //            check if #of prev clicks are == current month or multiple of 12 to change year
-            if((prevCounter.absoluteValue + now) == 13 || ((prevCounter.absoluteValue + now) > 12 && (prevCounter.absoluteValue + now) % 12 == 0)){
+            if((prevCounter + 1 == now) || (prevCounter.absoluteValue + now) == 13 || ((prevCounter.absoluteValue + now) > 12 && (prevCounter.absoluteValue + now - 1) % 12 == 0)){
                 yearCounter -= 1
                 year = LocalDate.now().minusYears(yearCounter.toLong()).year
             }
